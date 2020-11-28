@@ -1,0 +1,26 @@
+{
+    "name": "jotaa/franky-web",
+    "description": "A wrapper for franky core to fast web app development",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andres Reyes",
+            "email": "chess.coach.ar@gmail.com"
+        }
+    ],
+    "require": {
+        "jotaa/franky-core": "^1.1",
+        "vlucas/valitron": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ProjectRoot\\" : "",
+            "jotaa\\": "src/jotaa/",
+            "app\\": "app/"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.57"
+    }
+}
