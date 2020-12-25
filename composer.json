@@ -11,11 +11,15 @@
     ],
     "require": {
         "jotaa/franky-core": "^1.1",
-        "vlucas/valitron": "^1.4"
+        "vlucas/valitron": "^1.4",
+        "twbs/bootstrap": "5.0.0-alpha3",
+        "fortawesome/font-awesome": "^5.15",
+        "squizlabs/php_codesniffer": "*",
+        "popphp/pop-session": "^3.2"
     },
     "autoload": {
         "psr-4": {
-            "ProjectRoot\\" : "",
+            "ProjectRoot\\": "",
             "jotaa\\": "src/jotaa/",
             "app\\": "app/"
         }

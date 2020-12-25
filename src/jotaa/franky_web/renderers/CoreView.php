@@ -16,7 +16,7 @@ final class CoreView
         $this->weakFranky = WeakReference::create($franky);
     }
 
-    public function renderView(string $path, array $data = []) : string
+    public function renderView(string $path, array $data = [])
     {
         $filePath = $this->getViewPath($path);
         $_ENV['file'] = $filePath;
@@ -26,7 +26,7 @@ final class CoreView
             extract($data);
             require $filePath;
             ob_end_flush();
-            die;
+            return;
         }
         throw new \Safe\Exceptions\FilesystemException("View file {$filePath} doent exists");
     }
@@ -61,5 +61,70 @@ final class CoreView
     {
         $franky = $this->weakFranky->get();
         return $franky->config('viewPath') . self::DS . $fileName;
+    }
+
+
+    public static function renderBootstrapNavLinks(array $themeData)
+    {
+        $index = 0;
+        $html  = '';
+        foreach ($themeData['nav'] as $linkLabel => $url) {
+            if ($index === 0) {
+                $aria   = 'aria-current="page"';
+                $active = 'active';
+            }
+            $id = str_replace(' ', '_', $linkLabel);
+
+            $html .= "
+            <li class='nav-item'>
+              <a id='{$id}_{$index}'
+                 data-label='{$linkLabel}'
+                 class='nav-link {$active}' {$aria}
+                 href='{$url}'>{$linkLabel}</a>
+            </li>
+            ";
+        }
+        return $html;
+    }
+
+
+    public static function renderLi(array $elements = [], string $classnames = '')
+    {
+        return self::renderTag(
+            function ($index, $key) use ($classnames) {
+                $ids = str_replace(' ', '_', $key);
+                return "<li id='{$ids}_{$index}' class= {$classnames}'>{$key}</li>";
+            },
+            $elements
+        );
+    }
+
+
+    public static function renderLinks(array $elements = [], string $classnames = '', $parentTag = '')
+    {
+        return self::renderTag(
+            function ($index, $key, $value) use ($classnames, $parentTag) {
+                $ids = str_replace(' ', '_', $key);
+                $openTag  = '';
+                $closeTag = '';
+                if ((bool) $parentTag) {
+                    $openTag = "<{$parentTag} id='{$parentTag}_link_{$ids}_{$index}' class='{$parentTag}_links'>";
+                    $closeTag = "</{$parentTag}>";
+                }
+                return "{$openTag}<a id='{$ids}_{$index}' href='{$value} class= {$classnames}'>{$key}</a>{$closeTag}";
+            },
+            $elements
+        );
+    }
+
+    public static function renderTag(callable $renderer, array $elements = [])
+    {
+        $html = '';
+        $index = 0;
+        foreach ($elements as $key => $value) {
+            $html .= $renderer($index, $key, $value, $elements);
+            $index++;
+        }
+        return $html;
     }
 }
